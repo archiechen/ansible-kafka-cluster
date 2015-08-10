@@ -9,3 +9,4 @@
 - hosts: kafka
   roles:
     - kafka
+    - scala

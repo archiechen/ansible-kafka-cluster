@@ -1,5 +1,5 @@
 - name: start zookeeper
-  service: name=zookeeper state=started enabled=yes
+  service: name=zookeepe-server state=started enabled=yes
 
 - name: restart zookeeper
-  service: name=zookeeper state=restarted enabled=yes
+  service: name=zookeeper-server state=restarted enabled=yes

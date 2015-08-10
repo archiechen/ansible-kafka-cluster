@@ -65,10 +65,10 @@
 
 - name: systemd start script
   template:
-    src: kafka-systemd.j2
-    dest: /etc/systemd/system/kafka.service
+    src: kafka-service.j2
+    dest: /etc/init.d/kafka
     owner: root
     group: root
-    mode: 644
+    mode: 755
   notify: start kafka
   tags: kafka

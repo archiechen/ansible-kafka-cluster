@@ -29,7 +29,7 @@
 
 - name: Setting internal variable
   set_fact:
-    zk_name: zookeeper-{{ zk.version }}
+    zk_name: zookeeper
   tags: zookeeper
 
 - name: Zookeeper | Setting internal variable
@@ -37,22 +37,10 @@
     zk_dir: "{{ zk.install_dir }}/{{ zk_name }}"
   tags: zookeeper
 
-- name: check if tar has been downloaded
-  command: test -f /tmp/{{ zk_name }}.tar.gz
-  register: zookeeper_tar_downloaded
-  failed_when: zookeeper_tar_downloaded.rc not in [0, 1]
-  changed_when: False
-  tags: zookeeper
-
-- name: Ensure Zookeeper tar is downloaded
-  get_url:
-    url: "{{ zk.mirror }}/zookeeper/{{ zk_name }}/{{ zk_name }}.tar.gz"
-    dest: /tmp
-  tags: zookeeper
-  when: zookeeper_tar_downloaded.rc == 1
-
-- name: Ensure tar is extracted
-  command: tar xzf /tmp/{{ zk_name }}.tar.gz chdir="{{ zk.install_dir }}"
+- name: install_zookeeper_packages
+  yum: name={{ item }} state=installed
+  with_items:
+    - zookeeper-server
   tags: zookeeper
 
 # Config and start Zookeeper
@@ -73,17 +61,7 @@
 
 - name: Ensure myid is set to {{ cluster_node_seq }} in {{ zk.data_dir }}/myid
   template:
-    src: myid
+    src: myid.j2
     dest: "{{ zk.data_dir }}/myid"
   notify: restart zookeeper
-  tags: zookeeper
-
-- name: systemd start script
-  template:
-    src: zookeeper-systemd.j2
-    dest: /etc/systemd/system/zookeeper.service
-    owner: root
-    group: root
-    mode: 644
-  notify: start zookeeper
   tags: zookeeper

@@ -32,6 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.hostmanager.manage_host = true
   config.hostmanager.ignore_private_ip = false
   config.hostmanager.include_offline = true
+  config.ssh.private_key_path = "insecure_private_key"
 
   accept_oracle_licence = true # set to false if you don't agree (will not install Java8 for you)
 
